@@ -12,7 +12,7 @@ type IntStringMap map[int]string
 
 /* Perform a function on every value of a StringSlice */
 func (stringSlice StringSlice) Map(mapFunction func(string) string) StringSlice {
-	newStringSlice := make([]string, len(stringSlice))
+	newStringSlice := make(StringSlice, len(stringSlice))
 	for i, value := range stringSlice {
 		newStringSlice[i] = mapFunction(value)
 	}
@@ -61,7 +61,7 @@ func (intStringMap IntStringMap) Map(mapFunction func(string) string) IntStringM
 
 /* Create a new StringSlice with only unique strings */
 func (stringSlice StringSlice) Unique() StringSlice {
-	newStringSlice := make([]string, 0, len(stringSlice))
+	newStringSlice := make(StringSlice, 0)
 	temporaryMap := make(map[string]bool)
 	for _, value := range stringSlice {
 		if _, ok := temporaryMap[value]; !ok {
@@ -74,7 +74,7 @@ func (stringSlice StringSlice) Unique() StringSlice {
 
 /* Create a new IntSlice with only unique ints */
 func (intSlice IntSlice) Unique() IntSlice {
-	newIntSlice := make([]int, 0, len(intSlice))
+	newIntSlice := make(IntSlice, 0)
 	temporaryMap := make(map[int]bool)
 	for _, value := range intSlice {
 		if _, ok := temporaryMap[value]; !ok {
@@ -83,4 +83,49 @@ func (intSlice IntSlice) Unique() IntSlice {
 		}
 	}
 	return newIntSlice
+}
+
+/*
+	FILTER FUNCTIONS
+*/
+
+/* Filter out a subset of a StringSlice based on a function */
+func (stringSlice StringSlice) Filter(filterFunction func(string) bool) StringSlice {
+	newStringSlice := make(StringSlice, 0)
+	for _, value := range stringSlice {
+		if filterFunction(value) {
+			newStringSlice = append(newStringSlice, value)
+		}
+	}
+	return newStringSlice
+}
+
+/* Filter out a subset of an IntSlice based on a function */
+func (intSlice IntSlice) Filter(filterFunction func(int) bool) IntSlice {
+	newIntSlice := make(IntSlice, 0)
+	for _, value := range intSlice {
+		if filterFunction(value) {
+			newIntSlice = append(newIntSlice, value)
+		}
+	}
+	return newIntSlice
+}
+
+/*
+	INTERSECT FUNCTIONS
+*/
+
+/* Get the intersect of two different StringSlices */
+func (thisStringSlice StringSlice) Intersect(thatStringSlice StringSlice) StringSlice {
+	thisStringSliceUnique := thisStringSlice.Unique()
+	thatStringSliceUnique := thatStringSlice.Unique()
+	newStringSlice := make(StringSlice, 0)
+	for _, thisValue := range thisStringSliceUnique {
+		for _, thatValue := range thatStringSliceUnique {
+			if thisValue == thatValue {
+				newStringSlice = append(newStringSlice, thisValue)
+			}
+		}
+	}
+	return newStringSlice
 }
