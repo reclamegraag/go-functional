@@ -3,6 +3,7 @@ package functions
 import (
 	"fmt"
 	"math"
+	"strings"
 	"time"
 )
 
@@ -71,6 +72,20 @@ func (intStringMap IntStringMap) Map(mapFunction func(string) string) IntStringM
 		newIntStringMap[key] = mapFunction(value)
 	}
 	return newIntStringMap
+}
+
+/*
+	MAKE STRING FUNCTIONS
+*/
+
+/* Make a string from avery value of the String Slice */
+func (stringSlice StringSlice) MkString(separator string) string {
+	return strings.Join(stringSlice[:], separator)
+}
+
+/* Make a string from avery value of the String Slice with a start and an end sub string */
+func (stringSlice StringSlice) MkStringWithEnds(start string, separator string, end string) string {
+	return fmt.Sprintf("%s%s%s", start, strings.Join(stringSlice[:], separator), end)
 }
 
 /*
