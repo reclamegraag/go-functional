@@ -1,10 +1,28 @@
 package functions
 
+import (
+	"fmt"
+	"math"
+	"time"
+)
+
 type StringSlice []string
 type IntSlice []int
 type StringStringMap map[string]string
 type StringIntMap map[string]int
 type IntStringMap map[int]string
+
+/*
+	HELPER FUNCTIONS
+*/
+
+/* Run a block of code and get the elapsed time */
+func Timer(code func()) {
+	startTime := time.Now()
+	code()
+	elapsedTime := time.Since(startTime)
+	fmt.Printf("%d minutes %.f seconds %.f milliseconds", int(elapsedTime.Minutes()), math.Mod(elapsedTime.Seconds(), float64(60)), math.Mod(float64(elapsedTime.Milliseconds()), float64(1000)))
+}
 
 /*
 	MAP FUNCTIONS
@@ -86,6 +104,24 @@ func (intSlice IntSlice) Unique() IntSlice {
 }
 
 /*
+	FOR EACH FUNCTIONS
+*/
+
+/* Perform action on each StringSlice item */
+func (stringSlice StringSlice) Foreach(forEachFunction func(value string)) {
+	for _, value := range stringSlice {
+		forEachFunction(value)
+	}
+}
+
+/* Perform action on each IntSlice item */
+func (intSlice IntSlice) Foreach(forEachFunction func(i int)) {
+	for _, i := range intSlice {
+		forEachFunction(i)
+	}
+}
+
+/*
 	FILTER FUNCTIONS
 */
 
@@ -116,8 +152,8 @@ func (intSlice IntSlice) Filter(filterFunction func(int) bool) IntSlice {
 */
 
 /* Get the intersect of two different StringSlices */
-func (thisStringSlice StringSlice) Intersect(thatStringSlice StringSlice) StringSlice {
-	thisStringSliceUnique := thisStringSlice.Unique()
+func (stringSlice StringSlice) Intersect(thatStringSlice StringSlice) StringSlice {
+	thisStringSliceUnique := stringSlice.Unique()
 	thatStringSliceUnique := thatStringSlice.Unique()
 	newStringSlice := make(StringSlice, 0)
 	for _, thisValue := range thisStringSliceUnique {
@@ -128,6 +164,47 @@ func (thisStringSlice StringSlice) Intersect(thatStringSlice StringSlice) String
 		}
 	}
 	return newStringSlice
+}
+
+/* Get the intersect of two different StringSlices */
+func (intSlice IntSlice) Intersect(thatIntSlice IntSlice) IntSlice {
+	thisIntSliceUnique := intSlice.Unique()
+	thatIntSliceUnique := thatIntSlice.Unique()
+	newIntSlice := make(IntSlice, 0)
+	for _, thisValue := range thisIntSliceUnique {
+		for _, thatValue := range thatIntSliceUnique {
+			if thisValue == thatValue {
+				newIntSlice = append(newIntSlice, thisValue)
+			}
+		}
+	}
+	return newIntSlice
+}
+
+/*
+	DROP FUNCTIONS
+*/
+
+/* Remove a subset of a StringSlice based on a function */
+func (stringSlice StringSlice) DropWhile(dropWhileFunction func(string) bool) StringSlice {
+	newStringSlice := make(StringSlice, 0)
+	for _, value := range stringSlice {
+		if !dropWhileFunction(value) {
+			newStringSlice = append(newStringSlice, value)
+		}
+	}
+	return newStringSlice
+}
+
+/* Remove a subset of an IntSlice based on a function */
+func (intSlice IntSlice) DropWhile(dropWhileFunction func(int) bool) IntSlice {
+	newIntSlice := make(IntSlice, 0)
+	for _, i := range intSlice {
+		if !dropWhileFunction(i) {
+			newIntSlice = append(newIntSlice, i)
+		}
+	}
+	return newIntSlice
 }
 
 /*
