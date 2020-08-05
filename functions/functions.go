@@ -129,3 +129,18 @@ func (thisStringSlice StringSlice) Intersect(thatStringSlice StringSlice) String
 	}
 	return newStringSlice
 }
+
+/*
+	REDUCE FUNCTIONS
+*/
+
+/* Perform a function on every value of an IntSlice */
+func (intSlice IntSlice) Max() int {
+	var max int = intSlice[0]
+	for _, value := range intSlice {
+		if max < value {
+			max = value
+		}
+	}
+	return max
+}
