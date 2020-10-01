@@ -3,6 +3,7 @@ package functions
 import (
 	"fmt"
 	"math"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -80,6 +81,16 @@ func (intStringMap IntStringMap) Map(mapFunction func(string) string) IntStringM
 
 /* Make a string from avery value of the String Slice */
 func (stringSlice StringSlice) MkString(separator string) string {
+	return strings.Join(stringSlice[:], separator)
+}
+
+/* Make a string from avery value of the String Slice */
+func (intSlice IntSlice) MkString(separator string) string {
+	var stringSlice StringSlice
+	for _, value := range intSlice {
+		stringValue := strconv.Itoa(value)
+		stringSlice = append(stringSlice, stringValue)
+	}
 	return strings.Join(stringSlice[:], separator)
 }
 
